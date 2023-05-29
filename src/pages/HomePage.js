@@ -1,4 +1,4 @@
-import { homepage } from "./article-content";
+import { homepage } from "./article-content.js";
 const HomePage = () => {
   return (
     <>

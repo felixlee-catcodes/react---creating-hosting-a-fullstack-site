@@ -1,5 +1,5 @@
-import ArticlesList from "../components/ArticlesList";
-import { articles } from "./article-content";
+import ArticlesList from "../components/ArticlesList.js";
+import { articles } from "./article-content.js";
 
 const ArticlesListPage = () => {
   return (

@@ -1,4 +1,4 @@
-import { about } from "./article-content";
+import { about } from "./article-content.js";
 const AboutPage = () => {
   return (
     <>
