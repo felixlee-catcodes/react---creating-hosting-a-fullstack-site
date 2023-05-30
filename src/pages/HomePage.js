@@ -3,8 +3,8 @@ const HomePage = () => {
   return (
     <>
       <h1>{homepage.heading}</h1>
-      {homepage.content.map((p) => (
-        <p>{p}</p>
+      {homepage.content.map((p, i) => (
+        <p key={i}>{p}</p>
       ))}
     </>
   );

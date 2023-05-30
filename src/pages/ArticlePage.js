@@ -6,18 +6,18 @@ import NotFoundPage from "./NotFoundPage.js";
 import CommentsList from "../components/CommentsList.js";
 
 const ArticlePage = () => {
-  const [articleInfo, setArticleInfo] = useState({ upvotes: 0, comments: [] });
+  const [articleInfo, setArticleInfo] = useState({ upvotes: 0, comments: [], title: "", content: [] });
   const { articleId } = useParams();
 
   useEffect(() => {
     const loadArticleInfo = async () => {
       const response = await axios.get(`/api/articles/${articleId}`);
       const articleData = response.data;
+
       setArticleInfo(articleData);
-      console.log(articleInfo.upvotes);
     };
     loadArticleInfo();
-  }, [articleId, articleInfo.upvotes]);
+  }, [articleId]);
 
   // const article = articles.find((article) => article.name === articleId);
   console.log(articleInfo);
@@ -28,9 +28,9 @@ const ArticlePage = () => {
     <>
       <h1>{articleInfo.title}</h1>
       <p>This article has {articleInfo.upvotes} upvote(s)</p>
-      {/* {articleInfo.content.map((paragraph, i) => (
+      {articleInfo.content.map((paragraph, i) => (
         <p key={i}>{paragraph}</p>
-      ))} */}
+      ))}
       <CommentsList comments={articleInfo.comments} />
     </>
   );

@@ -4,6 +4,9 @@ import { db, connectToDb } from "./db.js";
 const app = express();
 app.use(express.json());
 
+//api routes
+
+//GET article by name
 app.get("/api/articles/:name", async (req, res) => {
   const { name } = req.params;
 
@@ -36,6 +39,7 @@ app.put("/api/articles/:name/upvote", async (req, res) => {
   }
 });
 
+//post/add comment
 app.post("/api/articles/:name/comments", async (req, res) => {
   const { postedBy, text } = req.body;
   const { name } = req.params;

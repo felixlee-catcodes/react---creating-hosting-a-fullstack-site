@@ -3,7 +3,7 @@ const AboutPage = () => {
   return (
     <>
       <h1>{about.heading}</h1>
-      {about.content.map((p, idx) => (idx === 2 || idx === 5 ? <h2>{p}</h2> : <p>{p}</p>))}
+      {about.content.map((p, idx) => (idx === 2 || idx === 5 ? <h2>{p}</h2> : <p key={idx}>{p}</p>))}
     </>
   );
 };
