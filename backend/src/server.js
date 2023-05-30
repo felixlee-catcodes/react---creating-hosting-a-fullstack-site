@@ -10,6 +10,7 @@ app.get("/api/articles/:name", async (req, res) => {
   const article = await db.collection("articles").findOne({ name });
 
   if (article) {
+    console.log(article);
     res.json(article);
   } else {
     res.sendStatus(404);
