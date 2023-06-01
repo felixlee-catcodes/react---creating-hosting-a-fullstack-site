@@ -12,15 +12,34 @@ admin.initializeApp({
 const app = express();
 app.use(express.json());
 
-//api routes
+// express middlware to autoload user info
+app.use(async (req, res, next) => {
+  //get auth token
+  const authToken = req.headers;
 
+  if (authToken) {
+    try {
+      //use token w/ firebase auth to load user info
+      req.user = await admin.auth().verifyIdToken(authToken);
+    } catch (e) {
+      res.sendStatus(400);
+    }
+  }
+
+  next();
+});
+
+//api routes
 //GET article by name
 app.get("/api/articles/:name", async (req, res) => {
   const { name } = req.params;
+  const { uid } = req.user;
 
   const article = await db.collection("articles").findOne({ name });
 
   if (article) {
+    const upvoteIds = article.upvoteIds || [];
+    article.canUpvote = uid && !upvoteIds.include(uid);
     res.json(article);
   } else {
     res.sendStatus(404);
