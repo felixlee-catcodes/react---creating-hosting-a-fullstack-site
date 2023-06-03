@@ -8,12 +8,15 @@ import ArticlePage from "./pages/ArticlePage.js";
 import NotFoundPage from "./pages/NotFoundPage.js";
 import LoginPage from "./pages/LoginPage.js";
 import CreateAccountPage from "./pages/CreateAccountPage.js";
+import useUser from "./hooks/useUser.js";
 
 function App() {
+  const { user, isLoading } = useUser();
+  //console.log(user);
   return (
     <BrowserRouter>
       <div className='App'>
-        <NavBar />
+        <NavBar user={user} />
         <div id='page-body'>
           <Routes>
             <Route path='/' element={<HomePage />} />
