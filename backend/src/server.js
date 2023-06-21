@@ -11,6 +11,8 @@ admin.initializeApp({
 });
 
 const app = express();
+
+//allows us to get the req.body from a post request
 app.use(express.json());
 
 app.use(morgan("dev"));
@@ -18,17 +20,15 @@ app.use(morgan("dev"));
 // express middlware to autoload user info
 app.use(async (req, res, next) => {
   //get auth token
-  const { authToken } = req.headers;
-  //console.log("authToken: " + authToken);
-  if (authToken) {
+  const { authtoken } = req.headers;
+  if (authtoken) {
     try {
       //use token w/ firebase auth to load user info
-      req.user = await admin.auth().verifyIdToken(authToken);
+      req.user = await admin.auth().verifyIdToken(authtoken);
     } catch (e) {
       return res.sendStatus(400);
     }
   }
-
   req.user = req.user || {};
 
   next();
@@ -41,12 +41,10 @@ app.get("/api/articles/:name", async (req, res) => {
   const { uid } = req.user;
 
   const article = await db.collection("articles").findOne({ name });
-  console.log(article);
 
   if (article) {
     const upvoteIds = article.upvoteIds || [];
     article.canUpvote = uid && !upvoteIds.includes(uid);
-
     res.json(article);
   } else {
     res.sendStatus(404);
@@ -66,11 +64,13 @@ app.use((req, res, next) => {
 app.put("/api/articles/:name/upvote", async (req, res) => {
   const { name } = req.params;
   const { uid } = req.user;
+
   const article = await db.collection("articles").findOne({ name });
 
   if (article) {
     const upvoteIds = article.upvoteIds || [];
-    const canUpvote = uid && !upvoteIds.include(uid);
+
+    const canUpvote = uid && !upvoteIds.includes(uid);
 
     if (canUpvote) {
       await db.collection("articles").updateOne(
@@ -83,7 +83,7 @@ app.put("/api/articles/:name/upvote", async (req, res) => {
     }
 
     const updatedArticle = await db.collection("articles").findOne({ name });
-
+    console.log("upvoteIds: ", updatedArticle.upvoteIds);
     res.json(updatedArticle);
   } else {
     res.sendStatus(`That article does not exist`);
@@ -95,6 +95,8 @@ app.post("/api/articles/:name/comments", async (req, res) => {
   const { text } = req.body;
   const { name } = req.params;
   const { email } = req.user;
+  console.log("email:", email);
+  console.log(req.user);
 
   await db.collection("articles").updateOne(
     { name },

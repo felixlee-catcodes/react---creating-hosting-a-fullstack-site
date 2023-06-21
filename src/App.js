@@ -12,7 +12,7 @@ import useUser from "./hooks/useUser.js";
 
 function App() {
   const { user, isLoading } = useUser();
-  //console.log(user);
+  //console.log("user: ", user);
   return (
     <BrowserRouter>
       <div className='App'>

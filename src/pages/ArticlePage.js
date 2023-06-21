@@ -6,6 +6,7 @@ import NotFoundPage from "./NotFoundPage.js";
 import CommentsList from "../components/CommentsList.js";
 import AddCommentForm from "../components/AddCommentForm.js";
 import useUser from "../hooks/useUser.js";
+import { Link } from "react-router-dom";
 
 const ArticlePage = () => {
   const [articleInfo, setArticleInfo] = useState({
@@ -23,18 +24,18 @@ const ArticlePage = () => {
     const loadArticleInfo = async () => {
       const token = user && (await user.getIdToken());
 
-      if (token) console.log("got token:", token);
       const headers = token ? { authtoken: token } : {};
       const response = await axios.get(`/api/articles/${articleId}`, { headers });
       const newArticleData = response.data;
-
       setArticleInfo(newArticleData);
     };
     loadArticleInfo();
   }, []);
 
   const addUpvote = async () => {
-    const response = await axios.put(`/api/articles/${articleId}/upvote`);
+    const token = user && (await user.getIdToken());
+    const headers = token ? { authtoken: token } : {};
+    const response = await axios.put(`/api/articles/${articleId}/upvote`, null, { headers });
     const updatedArticle = response.data;
     setArticleInfo(updatedArticle);
   };
@@ -47,7 +48,13 @@ const ArticlePage = () => {
       <h1>{articleInfo.title}</h1>
 
       <div className='upvotes-section'>
-        {user ? <button onClick={addUpvote}>Upvote</button> : <button>Log in to upvote</button>}
+        {user ? (
+          <button onClick={addUpvote}>Upvote</button>
+        ) : (
+          <Link to='/login'>
+            <button>Log in to upvote</button>
+          </Link>
+        )}
 
         <p>This article has {articleInfo.upvotes} upvote(s)</p>
       </div>
