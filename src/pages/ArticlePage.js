@@ -14,8 +14,9 @@ const ArticlePage = () => {
     comments: [],
     title: "",
     content: [],
+    canUpvote: false,
   });
-
+  const { canUpvote } = articleInfo;
   const { articleId } = useParams();
 
   const { user, isLoading } = useUser();
@@ -23,14 +24,15 @@ const ArticlePage = () => {
   useEffect(() => {
     const loadArticleInfo = async () => {
       const token = user && (await user.getIdToken());
-
       const headers = token ? { authtoken: token } : {};
       const response = await axios.get(`/api/articles/${articleId}`, { headers });
       const newArticleData = response.data;
       setArticleInfo(newArticleData);
     };
-    loadArticleInfo();
-  }, []);
+    if (isLoading) {
+      loadArticleInfo();
+    }
+  }, [isLoading, user]);
 
   const addUpvote = async () => {
     const token = user && (await user.getIdToken());
@@ -49,7 +51,7 @@ const ArticlePage = () => {
 
       <div className='upvotes-section'>
         {user ? (
-          <button onClick={addUpvote}>Upvote</button>
+          <button onClick={addUpvote}>{canUpvote ? "Upvote" : "Already Upvoted"}</button>
         ) : (
           <Link to='/login'>
             <button>Log in to upvote</button>
