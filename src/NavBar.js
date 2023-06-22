@@ -3,9 +3,10 @@ import { getAuth, signOut } from "firebase/auth";
 import useUser from "./hooks/useUser.js";
 
 const NavBar = () => {
-  const user = useUser();
+  const { user } = useUser();
   const navigate = useNavigate();
-  console.log("user: ", user);
+  //console.log("user: ", user.user);
+
   return (
     <nav>
       <ul>
@@ -18,27 +19,27 @@ const NavBar = () => {
         <li>
           <Link to='/articles'>Articles</Link>
         </li>
-        {user && <li>{user.email}</li>}
+        {/* {user && <li>{user.email}</li>} */}
+        <li className='nav-right'>
+          {user ? (
+            <button
+              onClick={() => {
+                signOut(getAuth());
+              }}
+            >
+              Log Out
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Log In
+            </button>
+          )}
+        </li>
       </ul>
-      <div className='nav-right'>
-        {user ? (
-          <button
-            onClick={() => {
-              signOut(getAuth());
-            }}
-          >
-            Log Out
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              navigate("/login");
-            }}
-          >
-            Log In
-          </button>
-        )}
-      </div>
     </nav>
   );
 };
