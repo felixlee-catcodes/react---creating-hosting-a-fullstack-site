@@ -2,7 +2,12 @@ import fs from "fs";
 import admin from "firebase-admin";
 import express from "express";
 import { db, connectToDb } from "./db.js";
+import path from "path";
 import morgan from "morgan";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const credentials = JSON.parse(fs.readFileSync("backend/credentials.json"));
 
@@ -14,6 +19,7 @@ const app = express();
 
 //allows us to get the req.body from a post request
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../build")));
 
 app.use(morgan("dev"));
 

@@ -16,6 +16,7 @@ const AddCommentForm = ({ articleName, onArticleUpdated }) => {
     console.log(updatedArticle);
     setCommentText("");
   };
+
   return (
     <div id='add-comment-form'>
       <h3>Add a Comment:</h3>
